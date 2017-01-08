@@ -6,6 +6,7 @@ package w1.percolation;
 public class Percolation {
 
     private WeightedQuickUnionUF unionFind; // underlying data structure
+    private WeightedQuickUnionUF backWash;
     private boolean[] opened;               // keeps track of sites state
     private int openNo;                     // number of opened sites
     private int size;                       // total size of all sites + virtual top and bottom
@@ -25,9 +26,11 @@ public class Percolation {
         this.n = n;
         openNo = 0;
         unionFind = new WeightedQuickUnionUF(size);      // +2 because of the virtual top and bottom
+        backWash = new WeightedQuickUnionUF(size -1);
         opened = new boolean[size];
         for (int i = 1; i <= n; i++) {
             unionFind.union(0, i);                      // connect top row with virtual Top and
+            backWash.union(0,i);
             unionFind.union(size - 1, size - 1 - i);    // connect bottom row with virtual bottom
         }
     }
@@ -45,20 +48,30 @@ public class Percolation {
         if (!opened[pos]) {
             opened[pos] = true;
             if (row > 1) {
-                if (opened[pos - n])
+                if (opened[pos - n]){
                     unionFind.union(pos, pos - n);
+                    backWash.union(pos, pos - n);
+                }
             }
             if (row < n) {
-                if (opened[pos + n])
+                if (opened[pos + n]){
                     unionFind.union(pos, pos + n);
+                    backWash.union(pos, pos + n);
+                }
+
             }
             if (col > 1) {
-                if (opened[pos - 1])
+                if (opened[pos - 1]){
                     unionFind.union(pos, pos - 1);
+                    backWash.union(pos, pos - 1);
+                }
+
             }
             if (col < n) {
-                if (opened[pos + 1])
+                if (opened[pos + 1]){
                     unionFind.union(pos, pos + 1);
+                    backWash.union(pos, pos + 1);
+                }
             }
             openNo++;
         }
@@ -87,7 +100,7 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         int pos = getPosition(row, col);
         if (opened[pos]) {
-            return unionFind.connected(0, pos);
+            return backWash.connected(0, pos);
         }
         return false;
     }
