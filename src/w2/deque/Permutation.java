@@ -7,6 +7,7 @@ import edu.princeton.cs.algs4.StdOut;
  * Created by Daniel on 1/9/2017.
  */
 
+
 //Randomized queue test client
 public class Permutation {
     public static void main(String[] args) {
