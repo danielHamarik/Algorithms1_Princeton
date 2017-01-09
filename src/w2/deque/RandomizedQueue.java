@@ -93,10 +93,17 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return new RandomizedQueueIterator();
     }
 
-    private class RandomizedQueueIterator implements Iterator {
+    private class RandomizedQueueIterator implements Iterator<Item> {
 
-        private Item[] copy = Arrays.copyOf(queue, n);
+        private Item[] copy;
         private int index = n;
+
+        private RandomizedQueueIterator() {
+            copy = (Item[]) new Object[n];
+            for (int i = 0; i < n; i++) {
+                copy[i] = queue[i];
+            }
+        }
 
         @Override
         public boolean hasNext() {
@@ -104,7 +111,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         @Override
-        public Object next() {
+        public Item next() {
             if (index <= 0) throw new NoSuchElementException();
             int pos = StdRandom.uniform(index);
             Item i = copy[pos];
